@@ -20,6 +20,8 @@
 		1FDE85C429BC5E1100ACBA39 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE85C329BC5E1100ACBA39 /* Endpoint.swift */; };
 		1FDE85C629BC603500ACBA39 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE85C529BC603500ACBA39 /* NetworkClient.swift */; };
 		1FDE85C829BC609700ACBA39 /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE85C729BC609700ACBA39 /* WeatherService.swift */; };
+		1FDE85CA29BC68E800ACBA39 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE85C929BC68E800ACBA39 /* City.swift */; };
+		1FDE85CC29BC690100ACBA39 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE85CB29BC690100ACBA39 /* Weather.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +59,8 @@
 		1FDE85C329BC5E1100ACBA39 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		1FDE85C529BC603500ACBA39 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		1FDE85C729BC609700ACBA39 /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
+		1FDE85C929BC68E800ACBA39 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		1FDE85CB29BC690100ACBA39 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +122,8 @@
 				1FDE85C329BC5E1100ACBA39 /* Endpoint.swift */,
 				1FDE85C529BC603500ACBA39 /* NetworkClient.swift */,
 				1FDE85C729BC609700ACBA39 /* WeatherService.swift */,
+				1FDE85C929BC68E800ACBA39 /* City.swift */,
+				1FDE85CB29BC690100ACBA39 /* Weather.swift */,
 			);
 			path = WeatherApp;
 			sourceTree = "<group>";
@@ -274,8 +280,10 @@
 				1FDE859229BC560B00ACBA39 /* AppDelegate.swift in Sources */,
 				1FDE859429BC560B00ACBA39 /* SceneDelegate.swift in Sources */,
 				1FDE85C229BC57B800ACBA39 /* ResultsViewController.swift in Sources */,
+				1FDE85CC29BC690100ACBA39 /* Weather.swift in Sources */,
 				1FDE85C429BC5E1100ACBA39 /* Endpoint.swift in Sources */,
 				1FDE85C629BC603500ACBA39 /* NetworkClient.swift in Sources */,
+				1FDE85CA29BC68E800ACBA39 /* City.swift in Sources */,
 				1FDE85C829BC609700ACBA39 /* WeatherService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

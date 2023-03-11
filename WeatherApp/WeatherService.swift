@@ -11,8 +11,8 @@ import Network
 
 protocol WeatherServiceable {
     func isNetworkAvailable() -> Bool
-    //    func lookupCity(completion: @escaping(Result<[City], Error>) -> ())
-    //    func getCurrentWeather(completion: @escaping(Result<Weather, Error>) -> ())
+    func lookupCity(name: String, completion: @escaping(Result<[City], Error>) -> ())
+    func getCurrentWeather(lat: String, long: String, completion: @escaping(Result<WeatherData, Error>) -> ())
     func downloadImage(name: String, completion: @escaping(Result<UIImage, Error>) -> ())
 }
 
@@ -62,4 +62,37 @@ class WeatherService: WeatherServiceable, NetworkClient {
         }
         return false
     }
+    
+    func lookupCity(name: String, completion: @escaping (Result<[City], Error>) -> ()) {
+        request(endpoint: WeatherEndpoint.lookupCity(name)) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    let decoded = try JSONDecoder().decode([City].self, from: data)
+                    completion(.success(decoded))
+                } catch let err {
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func getCurrentWeather(lat: String, long: String, completion: @escaping (Result<WeatherData, Error>) -> ()) {
+        request(endpoint: WeatherEndpoint.getCurrentWeather(lat: lat, long: long)) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    let decoded = try JSONDecoder().decode(WeatherData.self, from: data)
+                    completion(.success(decoded))
+                } catch let err {
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    // TODO: refactor json decoding code to avoid duplication
 }
