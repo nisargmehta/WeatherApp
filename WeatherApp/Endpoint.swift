@@ -44,7 +44,7 @@ extension WeatherEndpoint {
             path: "/geo/1.0/direct",
             method: .get,
             paramaters: [URLQueryItem(name: "q", value: name),
-                         URLQueryItem(name: "limit", value: "5"),
+                         URLQueryItem(name: "limit", value: "10"),
                          URLQueryItem(name: "appid", value: WeatherEndpoint.apiKey)]
         )
     }
