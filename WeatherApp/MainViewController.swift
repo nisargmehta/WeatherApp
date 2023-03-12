@@ -14,24 +14,34 @@ class MainViewController: UIViewController {
     }
     
     var searchController: UISearchController?
+    let viewModel = ViewModel(service: WeatherService())
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        viewModel.weatherDataFetchedHandler = { [weak self] in
+            self?.populateUI()
+        }
     }
 
     private func setup() {
         title = Constants.navTitle
-        let resultsVc = ResultsViewController()
+        let resultsVc = ResultsViewController(viewModel: viewModel)
         let controller = UISearchController(searchResultsController: resultsVc)
         navigationItem.searchController = controller
         controller.searchResultsUpdater = self
         self.searchController = controller
     }
+    
+    private func populateUI() {
+        print("populate UI")
+        print(viewModel.weatherData)
+    }
 }
 
 extension MainViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        print(searchController.searchBar.text ?? "")
+        let text = searchController.searchBar.text ?? ""
+        viewModel.checkCriteriaAndSearch(text)
     }
 }
