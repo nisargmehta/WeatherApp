@@ -16,6 +16,10 @@ struct WeatherData: Codable {
     let sys: System
     let timezone: Double
     let name: String
+    
+    var date: Date {
+        Date(timeIntervalSince1970: dt)
+    }
 }
 
 struct Weather: Codable {
@@ -28,6 +32,10 @@ struct Weather: Codable {
 struct Main: Codable {
     let temp: Double
     let humidity: Int
+    
+    var tempInF: Double {
+        (temp - 273.15) * 9/5 + 32
+    }
 }
 
 struct Wind: Codable {

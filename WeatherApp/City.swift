@@ -13,4 +13,12 @@ struct City: Codable {
     let lon: Double
     let country: String
     let state: String?
+    
+    var fullName: String {
+        var title = "\(name), \(country)"
+        if let st = state {
+            title = "\(name), \(st), \(country)"
+        }
+        return title
+    }
 }

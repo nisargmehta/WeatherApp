@@ -43,13 +43,9 @@ class ResultsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellReuseId, for: indexPath)
 
         let city = viewModel.cities[indexPath.row]
-        var title = "\(city.name), \(city.country)"
-        if let st = city.state {
-            title = "\(city.name), \(st), \(city.country)"
-        }
         // Configure the cell...
         var content = cell.defaultContentConfiguration()
-        content.text = title
+        content.text = city.fullName
         cell.contentConfiguration = content
         return cell
     }
