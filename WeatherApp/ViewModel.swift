@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 final class ViewModel {
     
@@ -14,6 +15,7 @@ final class ViewModel {
         static let delayInMs = 200
     }
     
+    let manager = LocationDataManager()
     let service: WeatherService
     private(set) var cities: [City] = []
     private(set) var weatherData: WeatherData?
@@ -22,7 +24,11 @@ final class ViewModel {
     
     var selectedCity: City? {
         didSet {
-            self.getWeatherData(for: selectedCity)
+            guard let city = selectedCity else {
+                return
+            }
+            self.getWeatherData(lat: String(city.lat), lon: String(city.lon))
+            // persist selection
         }
     }
     
@@ -32,6 +38,17 @@ final class ViewModel {
     // inject the network service via initializer
     init(service: WeatherService) {
         self.service = service
+        self.manager.dataDelegate = self
+    }
+    
+    func fetchWeatherForCurrentLocation() {
+        let status = manager.locationManager.authorizationStatus
+        guard status == .authorizedWhenInUse || status == .authorizedAlways, let coordinate = manager.getCurrentCoordinates() else {
+            return
+        }
+        let lat = String(coordinate.latitude)
+        let lon = String(coordinate.longitude)
+        self.getWeatherData(lat: lat, lon: lon)
     }
         
     func checkCriteriaAndSearch(_ text: String) {
@@ -80,13 +97,10 @@ final class ViewModel {
         }
     }
     
-    private func getWeatherData(for city: City?) {
-        guard let city = city else { return }
-        let latString = String(city.lat)
-        let lonString = String(city.lon)
+    private func getWeatherData(lat: String, lon: String) {
         service.getCurrentWeather(
-            lat: latString,
-            long: lonString
+            lat: lat,
+            long: lon
         ) { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -99,5 +113,15 @@ final class ViewModel {
                 }
             }
         }
+    }
+}
+
+extension ViewModel: LocationDataDelegate {
+    func statusChanged(status: CLAuthorizationStatus) {
+        // handle status change
+    }
+    
+    func currentLocationChanged() {
+        fetchWeatherForCurrentLocation()
     }
 }
