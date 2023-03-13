@@ -11,12 +11,13 @@ class MainViewController: UIViewController {
 
     private enum Constants {
         static let navTitle = "Weather App"
+        static let duration = 0.5
     }
     
     var searchController: UISearchController?
     let viewModel = ViewModel(service: WeatherService())
     
-    // outlets
+    // MARK: - Outlets
     @IBOutlet weak var mainStack: UIStackView!
     @IBOutlet weak var nameTitleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
@@ -26,6 +27,7 @@ class MainViewController: UIViewController {
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var windLabel: UILabel!
     
+    // MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -39,6 +41,7 @@ class MainViewController: UIViewController {
         viewModel.fetchWeatherForCurrentLocation()
     }
 
+    // MARK: -
     private func setup() {
         title = Constants.navTitle
         let resultsVc = ResultsViewController(viewModel: viewModel)
@@ -50,12 +53,22 @@ class MainViewController: UIViewController {
     }
     
     private func populateUI() {
-        print("populate UI")
-        print(viewModel.weatherData)
-        UIView.animate(withDuration: 0.5) {
+        if let icon = viewModel.getIconName() {
+            viewModel.getIconImage(name: icon) { [weak self] data in
+                if let img = data {
+                    self?.iconImageView.image = img
+                }
+            }
+        }
+        nameTitleLabel.text = viewModel.getCityName()
+        dateLabel.text = viewModel.getDateString()
+        temperatureLabel.text = viewModel.getTempString()
+        descriptionLabel.text = viewModel.getDescription()
+        humidityLabel.text = viewModel.getHumidity()
+        windLabel.text = viewModel.getWindSpeed()
+        UIView.animate(withDuration: Constants.duration) {
             self.mainStack.alpha = 1.0
         }
-
     }
 }
 

@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreLocation
+import UIKit
 
 final class ViewModel {
     
@@ -15,6 +16,7 @@ final class ViewModel {
         static let delayInMs = 200
     }
     
+    let imageCache = ImageCache()
     let manager = LocationDataManager()
     let service: WeatherService
     private(set) var cities: [City] = []
@@ -41,6 +43,7 @@ final class ViewModel {
         self.manager.dataDelegate = self
     }
     
+    // MARK: - logic funcs
     func fetchWeatherForCurrentLocation() {
         let status = manager.locationManager.authorizationStatus
         guard status == .authorizedWhenInUse || status == .authorizedAlways, let coordinate = manager.getCurrentCoordinates() else {
@@ -114,6 +117,27 @@ final class ViewModel {
             }
         }
     }
+    
+    func getIconImage(name: String, completion: @escaping ((UIImage?) -> Void)) {
+        // find in cache
+        if let img = imageCache.getData(key: name as NSString) {
+            completion(img)
+            return
+        }
+        service.downloadImage(name: name) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    // cache image
+                    self?.imageCache.saveData(data: data, key: name as NSString)
+                    completion(data)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                    completion(nil)
+                }
+            }
+        }
+    }
 }
 
 extension ViewModel: LocationDataDelegate {
@@ -123,5 +147,36 @@ extension ViewModel: LocationDataDelegate {
     
     func currentLocationChanged() {
         fetchWeatherForCurrentLocation()
+    }
+}
+
+// MARK: - weather data fetchers
+extension ViewModel {
+    func getCityName() -> String {
+        self.weatherData?.name ?? ""
+    }
+    
+    func getDateString() -> String {
+        self.weatherData?.dateString ?? ""
+    }
+    
+    func getTempString() -> String {
+        self.weatherData?.main.tempInF ?? ""
+    }
+    
+    func getDescription() -> String {
+        self.weatherData?.weather.first?.description ?? ""
+    }
+    
+    func getHumidity() -> String {
+        self.weatherData?.main.humidityString ?? ""
+    }
+    
+    func getWindSpeed() -> String {
+        self.weatherData?.wind.windString ?? ""
+    }
+    
+    func getIconName() -> String? {
+        self.weatherData?.weather.first?.icon
     }
 }
