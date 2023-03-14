@@ -16,11 +16,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="VWw-hp-s9G">
-                                <rect key="frame" x="197" y="438" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="color" red="0.26051741839999998" green="0.2605243921" blue="0.260520637" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </activityIndicatorView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CB4-qN-oEz">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <subviews>
@@ -142,14 +137,20 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="Xen-wS-5hv"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="fzD-7p-ce0"/>
                             </scrollView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="VWw-hp-s9G">
+                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                                <color key="color" red="0.26051741839999998" green="0.2605243921" blue="0.260520637" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="CB4-qN-oEz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="9oN-t6-rBA"/>
+                            <constraint firstItem="VWw-hp-s9G" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JQd-vp-BS0"/>
                             <constraint firstItem="CB4-qN-oEz" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="bwi-ij-UGw"/>
                             <constraint firstItem="CB4-qN-oEz" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="gPz-ep-ljQ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="CB4-qN-oEz" secondAttribute="trailing" id="sH9-ec-Fuf"/>
+                            <constraint firstItem="VWw-hp-s9G" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="v6i-G4-5SI"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="PhH-9r-I7R"/>

@@ -12,6 +12,7 @@ class MainViewController: UIViewController {
     private enum Constants {
         static let navTitle = "Weather App"
         static let duration = 0.5
+        static let networkAlertMsg = "Network unavailable"
     }
     
     var searchController: UISearchController?
@@ -26,19 +27,29 @@ class MainViewController: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var windLabel: UILabel!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        viewModel.weatherDataFetchedHandler = { [weak self] in
-            self?.populateUI()
+        viewModel.weatherDataFetchedHandler = { [weak self] (data, err) in
+            guard let self = self else { return }
+            self.loadingIndicator.stopAnimating()
+            if err == nil {
+                if data != nil {
+                    self.populateUI()
+                } else {
+                    self.navigationController?.showAlert(message: Constants.networkAlertMsg)
+                }
+            }
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.fetchWeatherForCurrentLocation()
+        loadingIndicator.startAnimating()
+        viewModel.fetchWeatherIfPossible()
     }
 
     // MARK: -
@@ -74,6 +85,7 @@ class MainViewController: UIViewController {
 
 extension MainViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
+        loadingIndicator.stopAnimating()
         let text = searchController.searchBar.text ?? ""
         viewModel.checkCriteriaAndSearch(text)
     }

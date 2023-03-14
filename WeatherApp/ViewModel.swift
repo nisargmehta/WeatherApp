@@ -36,7 +36,7 @@ final class ViewModel {
     }
     
     var citiesFetchedHandler: (() -> Void)?
-    var weatherDataFetchedHandler: (() -> Void)?
+    var weatherDataFetchedHandler: ((WeatherData?, Error?) -> Void)?
     
     // inject the network service via initializer
     init(service: WeatherService) {
@@ -62,7 +62,7 @@ final class ViewModel {
             return 
         }
         else {
-            // nothing for now
+            // TODO: inform the view
         }
     }
         
@@ -114,6 +114,7 @@ final class ViewModel {
     
     private func getWeatherData(lat: String, lon: String) {
         if !service.isNetworkAvailable() {
+            self.weatherDataFetchedHandler?(nil, nil)
             return
         }
         service.getCurrentWeather(
@@ -128,9 +129,10 @@ final class ViewModel {
                     // persist coordinates
                     let c = data.coord
                     self.dataStore.saveData(data: c, key: Constants.coordinateKey)
-                    self.weatherDataFetchedHandler?()
+                    self.weatherDataFetchedHandler?(data, nil)
                 case .failure(let error):
                     print(error.localizedDescription)
+                    self.weatherDataFetchedHandler?(nil, error)
                 }
             }
         }
