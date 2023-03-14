@@ -8,6 +8,7 @@
 import Foundation
 
 struct WeatherData: Codable {
+    let coord: Coordinate
     let weather: [Weather]
     let main: Main
     let visibility: Double
@@ -18,9 +19,15 @@ struct WeatherData: Codable {
     let name: String
     
     var dateString: String {
-        let date = Date(timeIntervalSince1970: dt)
+        let offset = dt + timezone
+        let date = Date(timeIntervalSince1970: offset)
         return DateFormatter.dayWithDateAndTime.string(from: date)
     }
+}
+
+struct Coordinate: Codable {
+    let lat: Double
+    let lon: Double
 }
 
 struct Weather: Codable {

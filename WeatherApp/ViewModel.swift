@@ -14,9 +14,11 @@ final class ViewModel {
     private enum Constants {
         static let minCount = 3
         static let delayInMs = 200
+        static let coordinateKey = "locationCoordinateKey"
     }
     
     let imageCache = ImageCache()
+    let dataStore = PersistentStore<Coordinate>()
     let manager = LocationDataManager()
     let service: WeatherService
     private(set) var cities: [City] = []
@@ -30,7 +32,6 @@ final class ViewModel {
                 return
             }
             self.getWeatherData(lat: String(city.lat), lon: String(city.lon))
-            // persist selection
         }
     }
     
@@ -44,14 +45,25 @@ final class ViewModel {
     }
     
     // MARK: - logic funcs
-    func fetchWeatherForCurrentLocation() {
+    func fetchWeatherIfPossible() {
+        // weather for current location
         let status = manager.locationManager.authorizationStatus
-        guard status == .authorizedWhenInUse || status == .authorizedAlways, let coordinate = manager.getCurrentCoordinates() else {
+        if status == .authorizedWhenInUse || status == .authorizedAlways, let coordinate = manager.getCurrentCoordinates() {
+            let lat = String(coordinate.latitude)
+            let lon = String(coordinate.longitude)
+            self.getWeatherData(lat: lat, lon: lon)
             return
         }
-        let lat = String(coordinate.latitude)
-        let lon = String(coordinate.longitude)
-        self.getWeatherData(lat: lat, lon: lon)
+        // weather for saved location
+        else if let coordinate = dataStore.getData(key: Constants.coordinateKey) {
+            let lat = String(coordinate.lat)
+            let lon = String(coordinate.lon)
+            self.getWeatherData(lat: lat, lon: lon)
+            return 
+        }
+        else {
+            // nothing for now
+        }
     }
         
     func checkCriteriaAndSearch(_ text: String) {
@@ -101,6 +113,9 @@ final class ViewModel {
     }
     
     private func getWeatherData(lat: String, lon: String) {
+        if !service.isNetworkAvailable() {
+            return
+        }
         service.getCurrentWeather(
             lat: lat,
             long: lon
@@ -110,6 +125,9 @@ final class ViewModel {
                 switch result {
                 case .success(let data):
                     self.weatherData = data
+                    // persist coordinates
+                    let c = data.coord
+                    self.dataStore.saveData(data: c, key: Constants.coordinateKey)
                     self.weatherDataFetchedHandler?()
                 case .failure(let error):
                     print(error.localizedDescription)
@@ -122,6 +140,9 @@ final class ViewModel {
         // find in cache
         if let img = imageCache.getData(key: name as NSString) {
             completion(img)
+            return
+        }
+        if !service.isNetworkAvailable() {
             return
         }
         service.downloadImage(name: name) { [weak self] result in
@@ -146,7 +167,7 @@ extension ViewModel: LocationDataDelegate {
     }
     
     func currentLocationChanged() {
-        fetchWeatherForCurrentLocation()
+        fetchWeatherIfPossible()
     }
 }
 
