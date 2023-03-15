@@ -36,6 +36,7 @@ struct WeatherEndpoint: Endpoint {
 }
 
 extension WeatherEndpoint {
+    // TODO: find a better way to store the key
     private static let apiKey = "1e6ffd8120367c7e4cf94c5df1409830"
     
     static func lookupCity(_ name: String) -> WeatherEndpoint {
@@ -44,7 +45,7 @@ extension WeatherEndpoint {
             path: "/geo/1.0/direct",
             method: .get,
             paramaters: [URLQueryItem(name: "q", value: name),
-                         URLQueryItem(name: "limit", value: "10"),
+                         URLQueryItem(name: "limit", value: "5"),
                          URLQueryItem(name: "appid", value: WeatherEndpoint.apiKey)]
         )
     }

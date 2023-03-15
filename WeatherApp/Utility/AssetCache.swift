@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import CoreLocation
 
+// generic protocol for caching data
 protocol DataCaching {
     associatedtype T
     associatedtype K
@@ -31,6 +32,7 @@ struct ImageCache: DataCaching {
     }
 }
 
+// Persistent store using user defaults
 struct PersistentStore<C: Codable>: DataCaching {
     private let userDefaults = UserDefaults.standard
     typealias T = C

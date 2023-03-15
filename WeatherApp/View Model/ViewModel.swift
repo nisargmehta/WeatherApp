@@ -24,7 +24,8 @@ final class ViewModel {
     private(set) var cities: [City] = []
     private(set) var weatherData: WeatherData?
     private var pendingRequestWorkItem: DispatchWorkItem?
-    var currentInput: String?
+    // current city search input
+    var currentSearchInput: String?
     
     var selectedCity: City? {
         didSet {
@@ -79,10 +80,11 @@ final class ViewModel {
         if !service.isNetworkAvailable() {
             return
         }
-        currentInput = input
+        currentSearchInput = input
         pendingRequestWorkItem?.cancel()
         pendingRequestWorkItem = nil
         
+        // using dispatch work item to throttle user input
         let requestWorkItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             self.fetchCities(input)
@@ -95,7 +97,8 @@ final class ViewModel {
     private func fetchCities(_ input: String) {
         service.lookupCity(name: input) { [weak self] result in
             guard let self = self else { return }
-            if self.currentInput != input {
+            // in case we get an older network call result
+            if self.currentSearchInput != input {
                 return
             }
             DispatchQueue.main.async {
