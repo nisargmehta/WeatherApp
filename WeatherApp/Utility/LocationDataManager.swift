@@ -13,7 +13,7 @@ protocol LocationDataDelegate: AnyObject {
     func currentLocationChanged()
 }
 
-class LocationDataManager : NSObject, CLLocationManagerDelegate {
+class LocationDataManager: NSObject, CLLocationManagerDelegate {
     
     var locationManager = CLLocationManager()
     weak var dataDelegate: LocationDataDelegate?
@@ -47,7 +47,6 @@ class LocationDataManager : NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last, manager.authorizationStatus == .authorizedWhenInUse else { return }
         print(location)
-        currentLocation = location
         dataDelegate?.currentLocationChanged()
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -55,6 +54,6 @@ class LocationDataManager : NSObject, CLLocationManagerDelegate {
     }
     
     func getCurrentCoordinates() -> CLLocationCoordinate2D? {
-        currentLocation?.coordinate
+        locationManager.location?.coordinate
     }
 }

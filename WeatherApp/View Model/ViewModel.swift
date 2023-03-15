@@ -20,7 +20,7 @@ final class ViewModel {
     let imageCache = ImageCache()
     let dataStore = PersistentStore<Coordinate>()
     let manager = LocationDataManager()
-    let service: WeatherService
+    let service: WeatherServiceable
     private(set) var cities: [City] = []
     private(set) var weatherData: WeatherData?
     private var pendingRequestWorkItem: DispatchWorkItem?
@@ -39,7 +39,7 @@ final class ViewModel {
     var weatherDataFetchedHandler: ((WeatherData?, Error?) -> Void)?
     
     // inject the network service via initializer
-    init(service: WeatherService) {
+    init(service: WeatherServiceable) {
         self.service = service
         self.manager.dataDelegate = self
     }
