@@ -53,17 +53,16 @@ final class ViewModel {
             let lat = String(coordinate.latitude)
             let lon = String(coordinate.longitude)
             self.getWeatherData(lat: lat, lon: lon)
-            return
         }
         // weather for saved location
         else if let coordinate = dataStore.getData(key: Constants.coordinateKey) {
             let lat = String(coordinate.lat)
             let lon = String(coordinate.lon)
             self.getWeatherData(lat: lat, lon: lon)
-            return 
         }
         else {
-            // TODO: inform the view
+            // TODO: inform the view, this is a hack
+            self.getWeatherData(lat: "", lon: "")
         }
     }
         
@@ -117,6 +116,11 @@ final class ViewModel {
     
     private func getWeatherData(lat: String, lon: String) {
         if !service.isNetworkAvailable() {
+            // TODO: send Error object back to the listner
+            self.weatherDataFetchedHandler?(nil, nil)
+            return
+        }
+        if lat.isEmpty || lon.isEmpty {
             self.weatherDataFetchedHandler?(nil, nil)
             return
         }

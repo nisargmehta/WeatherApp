@@ -12,7 +12,7 @@ class MainViewController: UIViewController {
     private enum Constants {
         static let navTitle = "Weather App"
         static let duration = 0.5
-        static let networkAlertMsg = "Network unavailable"
+        static let networkAlertMsg = "Network unavailable or invalid input"
     }
     
     var searchController: UISearchController?
